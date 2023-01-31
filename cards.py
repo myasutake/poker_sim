@@ -1,3 +1,6 @@
+import random
+
+
 class Card:
 
     def __init__(self, rank: str, suit: str) -> None:
@@ -76,6 +79,17 @@ class Deck:
         return len(self.list_of_all_cards_not_dealt)
 
     # Actions
+
+    def deal_card(self) -> Card:
+        card = random.choice(self.list_of_all_cards_not_dealt)
+        card.dealt = True
+        return card
+
+    def deal_cards(self, number_of_cards) -> list[Card]:
+        cards = []
+        for i in range(0, number_of_cards):
+            cards.append(self.deal_card())
+        return cards
 
     def shuffle(self) -> None:
         self._cards = []
