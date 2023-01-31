@@ -38,3 +38,9 @@ class TestCard:
             card = cards.Card(rank='2', suit=i_suit)
             assert card.suit == i_suit.lower()
         return
+
+    # Dealt Status
+    def test_default_not_dealt(self) -> None:
+        card = cards.Card(rank='A', suit='s')
+        assert not card.dealt
+        return
