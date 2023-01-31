@@ -40,6 +40,9 @@ class Card:
             raise ValueError(f"Invalid card suit '{value}' given.")
         return
 
+    def __repr__(self) -> str:
+        return f'{self.rank}{self.suit}'
+
 
 class Deck:
 
