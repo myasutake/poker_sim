@@ -3,13 +3,13 @@
 # Press Shift+F10 to execute it or replace it with your code.
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
 
-from common import cards
+from common import cards, table
 
 
 def main():
-    deck = cards.Deck()
-    hand = deck.deal_cards(number_of_cards=2)
-    print(f'Starting hand: {hand}')
+    t = table.Table()
+    t.deal_hand_to_random_seat()
+    print(t)
     return
 
 
