@@ -1,4 +1,4 @@
-import cards
+from common import cards
 
 
 class TestCard:

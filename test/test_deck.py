@@ -1,6 +1,6 @@
 import pytest
 
-import cards
+from common import cards
 
 
 @pytest.fixture(scope='function')
