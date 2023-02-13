@@ -5,6 +5,12 @@ class Table:
         self._populate_seats()
         return
 
+    def get_seat_by_number(self, seat_number: int) -> 'Seat':
+        for i_seat in self._seats:
+            if i_seat.number == seat_number:
+                return i_seat
+        raise IndexError(f'Seat number {seat_number} not found.')
+
     def _populate_seats(self) -> None:
         seat_numbers = range(1, 10)
         seat_names = ['UTG', 'UTG+1', 'UTG+2', 'LJ', 'HJ', 'CO', 'BTN', 'SB', 'BB']
