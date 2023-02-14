@@ -1,4 +1,5 @@
 import random
+from typing import Union
 
 from common import cards
 
@@ -22,11 +23,25 @@ class Table:
         self.deal(number_of_cards=2, seat_number=seat_number)
         return
 
+    # Seats
+
     def get_seat_by_number(self, seat_number: int) -> 'Seat':
         for i_seat in self._seats:
             if i_seat.number == seat_number:
                 return i_seat
         raise IndexError(f'Seat number {seat_number} not found.')
+
+    def assign_role_to_seat(self, seat_number: int, role: str) -> None:
+        seat = self.get_seat_by_number(seat_number=seat_number)
+        seat.role = role
+        return
+
+    def get_seats_by_role(self, role: Union[str, None]) -> list['Seat']:
+        seats = []
+        for i_seat in self._seats:
+            if i_seat.role == role:
+                seats.append(i_seat)
+        return seats
 
     def _populate_seats(self) -> None:
         seat_numbers = range(1, 10)

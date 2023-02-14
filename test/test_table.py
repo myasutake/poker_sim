@@ -48,3 +48,32 @@ class TestAssignRoleToSeat:
                 assert False, 'Wrong exception raised.'
             else:
                 assert False, 'No exception raised.'
+
+
+class TestGetSeatsByRole:
+
+    def test_seat_number(self, t):
+        seat_number = 3
+        role = 'H'
+        t.assign_role_to_seat(seat_number=seat_number, role=role)
+        seats = t.get_seats_by_role(role=role)
+        assert seats[0].number == seat_number
+
+    def test_seat_role(self, t):
+        seat_number = 3
+        role = 'H'
+        t.assign_role_to_seat(seat_number=seat_number, role=role)
+        seats = t.get_seats_by_role(role=role)
+        assert seats[0].role == role
+
+    def test_no_hits(self, t):
+        seats = t.get_seats_by_role(role='H')
+        assert seats == []
+
+    def test_multiple_hits(self, t):
+        seat_numbers = [1, 3, 6]
+        role = 'V'
+        for i_seat_number in seat_numbers:
+            t.assign_role_to_seat(seat_number=i_seat_number, role=role)
+        seats = t.get_seats_by_role(role=role)
+        assert len(seats) == 3
