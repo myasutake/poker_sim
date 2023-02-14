@@ -25,3 +25,26 @@ class TestTable:
             assert False, 'Wrong exception raised.'
         else:
             assert False, 'No exception raised.'
+
+
+class TestAssignRoleToSeat:
+
+    def test_valid_values(self, t):
+        seat_number = 4
+        seat = t.get_seat_by_number(seat_number=seat_number)
+        for i_role in [None, 'H', 'V']:
+            seat.role = i_role
+        return
+
+    def test_invalid_values(self, t):
+        seat_number = 4
+        seat = t.get_seat_by_number(seat_number=seat_number)
+        for i_role in ['A', 'h', 'v', 1]:
+            try:
+                seat.role = i_role
+            except ValueError:
+                continue
+            except:
+                assert False, 'Wrong exception raised.'
+            else:
+                assert False, 'No exception raised.'

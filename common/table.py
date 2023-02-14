@@ -48,6 +48,7 @@ class Seat:
         self._number = number
         self._name = name
         self._cards = []
+        self._role = None
         return
 
     @property
@@ -65,4 +66,22 @@ class Seat:
     @hand.setter
     def hand(self, value: list[cards.Card]) -> None:
         self._cards = value
+        return
+
+    # Role
+
+    @property
+    def role(self) -> str:
+        return self._role
+
+    @role.setter
+    def role(self, value: str) -> None:
+        self._verify_role(value=value)
+        self._role = value
+        return
+
+    @staticmethod
+    def _verify_role(value: str) -> None:
+        if value not in [None, 'H', 'V']:
+            raise ValueError(f"Invalid role {value} assigned to seat.")
         return
