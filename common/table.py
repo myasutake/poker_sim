@@ -60,6 +60,11 @@ class Table(BaseClass):
         seats = self.get_seats_by_role(role=None)
         return random.choice(seats)
 
+    def assign_hero_role_to_random_empty_seat(self) -> None:
+        seat = self.get_random_empty_seat()
+        self.assign_role_to_seat(seat_number=seat.number, role='H')
+        return
+
     def _populate_seats(self) -> None:
         seat_numbers = range(1, 10)
         seat_names = ['UTG', 'UTG+1', 'UTG+2', 'LJ', 'HJ', 'CO', 'BTN', 'SB', 'BB']
