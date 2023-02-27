@@ -4,7 +4,16 @@ from typing import Union
 from common import cards
 
 
-class Table:
+class BaseClass:
+
+    @staticmethod
+    def _verify_role(value: str) -> None:
+        if value not in [None, 'H', 'V']:
+            raise ValueError(f"Invalid role {value} assigned to seat.")
+        return
+
+
+class Table(BaseClass):
 
     def __init__(self) -> None:
         self._seats = []
@@ -32,11 +41,15 @@ class Table:
         raise IndexError(f'Seat number {seat_number} not found.')
 
     def assign_role_to_seat(self, seat_number: int, role: str) -> None:
+        self._verify_role(value=role)
+
         seat = self.get_seat_by_number(seat_number=seat_number)
         seat.role = role
         return
 
     def get_seats_by_role(self, role: Union[str, None]) -> list['Seat']:
+        self._verify_role(value=role)
+
         seats = []
         for i_seat in self._seats:
             if i_seat.role == role:
@@ -57,7 +70,7 @@ class Table:
         return s
 
 
-class Seat:
+class Seat(BaseClass):
 
     def __init__(self, number: int, name: str) -> None:
         self._number = number
@@ -93,10 +106,4 @@ class Seat:
     def role(self, value: str) -> None:
         self._verify_role(value=value)
         self._role = value
-        return
-
-    @staticmethod
-    def _verify_role(value: str) -> None:
-        if value not in [None, 'H', 'V']:
-            raise ValueError(f"Invalid role {value} assigned to seat.")
         return
