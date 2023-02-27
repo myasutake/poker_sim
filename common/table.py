@@ -56,12 +56,18 @@ class Table(BaseClass):
                 seats.append(i_seat)
         return seats
 
+    def get_random_empty_seat(self) -> 'Seat':
+        seats = self.get_seats_by_role(role=None)
+        return random.choice(seats)
+
     def _populate_seats(self) -> None:
         seat_numbers = range(1, 10)
         seat_names = ['UTG', 'UTG+1', 'UTG+2', 'LJ', 'HJ', 'CO', 'BTN', 'SB', 'BB']
         for (i_seat_number, i_seat_name) in zip(seat_numbers, seat_names):
             self._seats.append(Seat(number=i_seat_number, name=i_seat_name))
         return
+
+    # Misc
 
     def __str__(self) -> str:
         s = ''
