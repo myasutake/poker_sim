@@ -56,6 +56,14 @@ class Table(BaseClass):
                 seats.append(i_seat)
         return seats
 
+    def get_hero_seat(self) -> Union['Seat', None]:
+        seats = self.get_seats_by_role(role='H')
+        if len(seats) > 1:
+            raise RuntimeError(f"{len(seats)} seats found with role 'H'.")
+        if len(seats) == 1:
+            return seats[0]
+        return None
+
     def get_random_empty_seat(self) -> 'Seat':
         seats = self.get_seats_by_role(role=None)
         return random.choice(seats)
