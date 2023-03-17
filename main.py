@@ -8,7 +8,9 @@ from common import cards, table
 
 def main():
     t = table.Table()
-    t.deal_hand_to_random_seat()
+    t.assign_hero_role_to_random_empty_seat()
+    hero_seat = t.get_hero_seat()
+    t.deal(number_of_cards=2, seat_number=hero_seat.number)
     print(t)
     return
 
