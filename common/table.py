@@ -28,12 +28,6 @@ class Table(BaseClass):
         seat.hand = self._deck.deal_cards(number_of_cards=number_of_cards)
         return
 
-    def deal_hand_to_random_seat(self) -> None:
-        number_of_seats = len(self._seats)
-        seat_number = random.randint(1, number_of_seats)
-        self.deal(number_of_cards=2, seat_number=seat_number)
-        return
-
     # Seats
 
     def get_seat_by_number(self, seat_number: int) -> 'Seat':
