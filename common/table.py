@@ -70,6 +70,10 @@ class Table(BaseClass):
         self._state.table = self
         return
 
+    def init_setup(self) -> None:
+        self.state.init_setup()
+        return
+
     def execute(self) -> None:
         return
 
@@ -184,6 +188,10 @@ class TableState(ABC):
     def execute(self) -> None:
         return
 
+    @abstractmethod
+    def init_setup(self) -> None:
+        pass
+
 
 class PreFlop(TableState):
 
@@ -202,5 +210,12 @@ class PreFlop(TableState):
         return
 
     # State Machine Methods
+
+    def init_setup(self) -> None:
+        self.assign_hero_role_to_random_empty_seat()
+        hero_seat = self.get_hero_seat()
+        self.deal(number_of_cards=2, seat_number=hero_seat.number)
+        return
+
     def execute(self) -> None:
         pass
