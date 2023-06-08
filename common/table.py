@@ -23,18 +23,16 @@ class Table(BaseClass):
         self._deck = cards.Deck()
         return
 
+    # Deal Cards
+
     def deal(self, number_of_cards: int, seat_number: int) -> None:
-        seat = self.get_seat_by_number(seat_number=seat_number)
-        seat.hand = self._deck.deal_cards(number_of_cards=number_of_cards)
+        self.state.deal(number_of_cards=number_of_cards, seat_number=seat_number)
         return
 
     # Seats
 
     def get_seat_by_number(self, seat_number: int) -> 'Seat':
-        for i_seat in self._seats:
-            if i_seat.number == seat_number:
-                return i_seat
-        raise IndexError(f'Seat number {seat_number} not found.')
+        return self.state.get_seat_by_number(seat_number=seat_number)
 
     def assign_role_to_seat(self, seat_number: int, role: str) -> None:
         self._verify_role(value=role)
@@ -44,25 +42,13 @@ class Table(BaseClass):
         return
 
     def get_seats_by_role(self, role: Union[str, None]) -> list['Seat']:
-        self._verify_role(value=role)
-
-        seats = []
-        for i_seat in self._seats:
-            if i_seat.role == role:
-                seats.append(i_seat)
-        return seats
+        return self.state.get_seats_by_role(role=role)
 
     def get_hero_seat(self) -> Union['Seat', None]:
-        seats = self.get_seats_by_role(role='H')
-        if len(seats) > 1:
-            raise RuntimeError(f"{len(seats)} seats found with role 'H'.")
-        if len(seats) == 1:
-            return seats[0]
-        return None
+        return self.state.get_hero_seat()
 
     def get_random_empty_seat(self) -> 'Seat':
-        seats = self.get_seats_by_role(role=None)
-        return random.choice(seats)
+        return self.state.get_random_empty_seat()
 
     def assign_hero_role_to_random_empty_seat(self) -> None:
         seat = self.get_random_empty_seat()
@@ -142,6 +128,44 @@ class Seat(BaseClass):
 class TableState(ABC):
 
     _table = None
+
+    # Deal Cards
+
+    def deal(self, number_of_cards: int, seat_number: int) -> None:
+        seat = self.table.get_seat_by_number(seat_number=seat_number)
+        seat.hand = self.table._deck.deal_cards(number_of_cards=number_of_cards)
+        return
+
+    # Seats
+
+    def get_seat_by_number(self, seat_number: int) -> Seat:
+        for i_seat in self.table._seats:
+            if i_seat.number == seat_number:
+                return i_seat
+        raise IndexError(f'Seat number {seat_number} not found.')
+
+    def get_seats_by_role(self, role: Union[str, None]) -> list[Seat]:
+        self.table._verify_role(value=role)
+
+        seats = []
+        for i_seat in self.table._seats:
+            if i_seat.role == role:
+                seats.append(i_seat)
+        return seats
+
+    def get_hero_seat(self) -> Union[Seat, None]:
+        seats = self.get_seats_by_role(role='H')
+        if len(seats) > 1:
+            raise RuntimeError(f"{len(seats)} seats found with role 'H'.")
+        if len(seats) == 1:
+            return seats[0]
+        return None
+
+    def get_random_empty_seat(self) -> Seat:
+        seats = self.get_seats_by_role(role=None)
+        return random.choice(seats)
+
+    # State Machine Methods
 
     @property
     def table(self) -> Table:
