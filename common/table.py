@@ -8,7 +8,7 @@ from common import cards
 class BaseClass:
 
     @staticmethod
-    def _verify_role(value: str) -> None:
+    def verify_role(value: str) -> None:
         if value not in [None, 'H', 'V']:
             raise ValueError(f"Invalid role {value} assigned to seat.")
         return
@@ -18,9 +18,9 @@ class Table(BaseClass):
 
     def __init__(self) -> None:
         self.state = PreFlop()
-        self._seats = []
+        self.seats = []
         self._populate_seats()
-        self._deck = cards.Deck()
+        self.deck = cards.Deck()
         return
 
     # Deal Cards
@@ -35,7 +35,7 @@ class Table(BaseClass):
         return self.state.get_seat_by_number(seat_number=seat_number)
 
     def assign_role_to_seat(self, seat_number: int, role: str) -> None:
-        self._verify_role(value=role)
+        self.verify_role(value=role)
 
         seat = self.get_seat_by_number(seat_number=seat_number)
         seat.role = role
@@ -59,7 +59,7 @@ class Table(BaseClass):
         seat_numbers = range(1, 10)
         seat_names = ['UTG', 'UTG+1', 'UTG+2', 'LJ', 'HJ', 'CO', 'BTN', 'SB', 'BB']
         for (i_seat_number, i_seat_name) in zip(seat_numbers, seat_names):
-            self._seats.append(Seat(number=i_seat_number, name=i_seat_name))
+            self.seats.append(Seat(number=i_seat_number, name=i_seat_name))
         return
 
     # States
@@ -81,7 +81,7 @@ class Table(BaseClass):
 
     def __str__(self) -> str:
         s = ''
-        for i_seat in self._seats:
+        for i_seat in self.seats:
             s += f'Seat {i_seat.number} - {i_seat.name:5} - {i_seat.hand}\n'
         return s
 
@@ -120,7 +120,7 @@ class Seat(BaseClass):
 
     @role.setter
     def role(self, value: str) -> None:
-        self._verify_role(value=value)
+        self.verify_role(value=value)
         self._role = value
         return
 
@@ -133,22 +133,22 @@ class TableState(ABC):
 
     def deal(self, number_of_cards: int, seat_number: int) -> None:
         seat = self.table.get_seat_by_number(seat_number=seat_number)
-        seat.hand = self.table._deck.deal_cards(number_of_cards=number_of_cards)
+        seat.hand = self.table.deck.deal_cards(number_of_cards=number_of_cards)
         return
 
     # Seats
 
     def get_seat_by_number(self, seat_number: int) -> Seat:
-        for i_seat in self.table._seats:
+        for i_seat in self.table.seats:
             if i_seat.number == seat_number:
                 return i_seat
         raise IndexError(f'Seat number {seat_number} not found.')
 
     def get_seats_by_role(self, role: Union[str, None]) -> list[Seat]:
-        self.table._verify_role(value=role)
+        self.table.verify_role(value=role)
 
         seats = []
-        for i_seat in self.table._seats:
+        for i_seat in self.table.seats:
             if i_seat.role == role:
                 seats.append(i_seat)
         return seats
