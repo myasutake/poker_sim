@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 import random
 from typing import Union
 
-from common import cards
+import common.cards
 
 
 class BaseClass:
@@ -20,7 +20,7 @@ class Table(BaseClass):
         self.state = PreFlop()
         self.seats = []
         self._populate_seats()
-        self.deck = cards.Deck()
+        self.deck = common.cards.Deck()
         return
 
     # Deal Cards
@@ -104,11 +104,11 @@ class Seat(BaseClass):
         return self._name
 
     @property
-    def hand(self) -> list[cards.Card]:
+    def hand(self) -> list[common.cards.Card]:
         return self._cards
 
     @hand.setter
-    def hand(self, value: list[cards.Card]) -> None:
+    def hand(self, value: list[common.cards.Card]) -> None:
         self._cards = value
         return
 
