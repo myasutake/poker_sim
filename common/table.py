@@ -1,3 +1,4 @@
+from abc import ABC, abstractmethod
 import random
 from typing import Union
 
@@ -16,6 +17,7 @@ class BaseClass:
 class Table(BaseClass):
 
     def __init__(self) -> None:
+        self.state = PreFlop()
         self._seats = []
         self._populate_seats()
         self._deck = cards.Deck()
@@ -80,6 +82,21 @@ class Table(BaseClass):
             self._seats.append(Seat(number=i_seat_number, name=i_seat_name))
         return
 
+    # States
+
+    @property
+    def state(self) -> 'TableState':
+        return self._state
+
+    @state.setter
+    def state(self, value) -> None:
+        self._state = value
+        self._state.table = self
+        return
+
+    def execute(self) -> None:
+        return
+
     # Misc
 
     def __str__(self) -> str:
@@ -126,3 +143,27 @@ class Seat(BaseClass):
         self._verify_role(value=value)
         self._role = value
         return
+
+
+class TableState(ABC):
+
+    _table = None
+
+    @property
+    def table(self) -> Table:
+        return self._table
+
+    @table.setter
+    def table(self, value: Table) -> None:
+        self._table = value
+        return
+
+    @abstractmethod
+    def execute(self) -> None:
+        return
+
+
+class PreFlop(TableState):
+
+    def execute(self) -> None:
+        pass
