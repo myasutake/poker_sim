@@ -74,7 +74,7 @@ class Table(BaseClass):
         self.state.init_setup()
         return
 
-    def execute(self) -> None:
+    def prompt_user_and_execute(self) -> None:
         return
 
     # Misc
@@ -185,8 +185,8 @@ class TableState(ABC):
         return
 
     @abstractmethod
-    def execute(self) -> None:
-        return
+    def prompt_user_and_execute(self) -> None:
+        pass
 
     @abstractmethod
     def init_setup(self) -> None:
@@ -217,5 +217,5 @@ class PreFlop(TableState):
         self.deal(number_of_cards=2, seat_number=hero_seat.number)
         return
 
-    def execute(self) -> None:
+    def prompt_user_and_execute(self) -> None:
         pass
