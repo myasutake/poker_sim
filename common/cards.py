@@ -94,10 +94,20 @@ class Deck:
             cards.append(self.deal_card())
         return cards
 
+    def return_card_to_deck(self, card: Card) -> None:
+        self._verify_card_belongs_to_this_deck(card=card)
+        card.dealt = False
+        return
+
     def shuffle(self) -> None:
         self._cards = []
         for i_rank in ['A', '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K']:
             for i_suit in ['c', 'd', 'h', 's']:
                 i_card = Card(rank=i_rank, suit=i_suit)
                 self._cards.append(i_card)
+        return
+
+    def _verify_card_belongs_to_this_deck(self, card: Card) -> None:
+        if card not in self._cards:
+            raise ValueError(f"Card {card} belongs to a different deck.")
         return
