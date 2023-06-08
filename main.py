@@ -10,7 +10,6 @@ from common import cards, table
 if __name__ == '__main__':
     t = table.Table()
     t.init_setup()
-    print(t)
     while True:
         t.prompt_user_and_execute()
 

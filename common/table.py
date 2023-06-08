@@ -227,6 +227,7 @@ class PreFlop(TableState):
         self.assign_hero_role_to_random_empty_seat()
         hero_seat = self.get_hero_seat()
         self.deal(number_of_cards=2, seat_number=hero_seat.number)
+        print(self.table)
         return
 
     def prompt_user_and_execute(self) -> None:
