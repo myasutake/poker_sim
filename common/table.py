@@ -29,6 +29,10 @@ class Table(BaseClass):
         self.state.deal(number_of_cards=number_of_cards, seat_number=seat_number)
         return
 
+    def return_heros_cards_to_deck(self) -> None:
+        self.state.return_heros_cards_to_deck()
+        return
+
     # Seats
 
     def get_seat_by_number(self, seat_number: int) -> 'Seat':
@@ -75,6 +79,7 @@ class Table(BaseClass):
         return
 
     def prompt_user_and_execute(self) -> None:
+        self.state.prompt_user_and_execute()
         return
 
     # Misc
@@ -134,6 +139,13 @@ class TableState(ABC):
     def deal(self, number_of_cards: int, seat_number: int) -> None:
         seat = self.table.get_seat_by_number(seat_number=seat_number)
         seat.hand = self.table.deck.deal_cards(number_of_cards=number_of_cards)
+        return
+
+    def return_heros_cards_to_deck(self) -> None:
+        seat = self.get_hero_seat()
+        for i_card in seat.hand:
+            self.table.deck.return_card_to_deck(card=i_card)
+        seat.hand = []
         return
 
     # Seats
@@ -218,4 +230,30 @@ class PreFlop(TableState):
         return
 
     def prompt_user_and_execute(self) -> None:
-        pass
+        prompt_text = "1: Keep seat, change hand"
+        prompt_text += "\nQ: Quit"
+        prompt_text += "\n\n"
+        print(prompt_text)
+
+        value = None
+        input_is_valid = False
+        while not input_is_valid:
+            value = input("> ").upper()
+            input_is_valid = self._validate_input(value=value)
+
+        if value == 'Q':
+            quit()
+
+        if value == '1':
+            self.return_heros_cards_to_deck()
+            hero_seat = self.get_hero_seat()
+            self.deal(number_of_cards=2, seat_number=hero_seat.number)
+            print(self.table)
+        return
+
+    @staticmethod
+    def _validate_input(value: str) -> bool:
+        if value.upper() in ['1', 'Q']:
+            return True
+        print("Invalid input.")
+        return False
