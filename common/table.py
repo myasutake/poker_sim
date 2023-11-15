@@ -147,13 +147,17 @@ class TableState(ABC):
         seats = self.get_seats_by_role(role=None)
         return random.choice(seats)
 
-    @abstractmethod
     def assign_role_to_seat(self, seat_number: int, role: str) -> None:
-        pass
+        self.table.verify_role(value=role)
 
-    @abstractmethod
+        seat = self.get_seat_by_number(seat_number=seat_number)
+        seat.role = role
+        return
+
     def assign_hero_role_to_random_empty_seat(self) -> None:
-        pass
+        seat = self.get_random_empty_seat()
+        self.assign_role_to_seat(seat_number=seat.number, role='H')
+        return
 
     # State Machine Methods
 
@@ -176,20 +180,6 @@ class TableState(ABC):
 
 
 class PreFlop(TableState):
-
-    # Seats
-
-    def assign_role_to_seat(self, seat_number: int, role: str) -> None:
-        self.table.verify_role(value=role)
-
-        seat = self.get_seat_by_number(seat_number=seat_number)
-        seat.role = role
-        return
-
-    def assign_hero_role_to_random_empty_seat(self) -> None:
-        seat = self.get_random_empty_seat()
-        self.assign_role_to_seat(seat_number=seat.number, role='H')
-        return
 
     # State Machine Methods
 
