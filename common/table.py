@@ -14,66 +14,6 @@ class BaseClass:
         return
 
 
-class Table(BaseClass):
-
-    def __init__(self) -> None:
-        self.state = PreFlop()
-        self.seats = []
-        self._populate_seats()
-        self.deck = common.cards.Deck()
-        return
-
-    # Seats
-
-    def get_seat_by_number(self, seat_number: int) -> 'Seat':
-        return self.state.get_seat_by_number(seat_number=seat_number)
-
-    def assign_role_to_seat(self, seat_number: int, role: str) -> None:
-        self.state.assign_role_to_seat(seat_number=seat_number, role=role)
-        return
-
-    def get_seats_by_role(self, role: Union[str, None]) -> list['Seat']:
-        return self.state.get_seats_by_role(role=role)
-
-    def get_hero_seat(self) -> Union['Seat', None]:
-        return self.state.get_hero_seat()
-
-    def _populate_seats(self) -> None:
-        seat_numbers = range(1, 10)
-        seat_names = ['UTG', 'UTG+1', 'UTG+2', 'LJ', 'HJ', 'CO', 'BTN', 'SB', 'BB']
-        for (i_seat_number, i_seat_name) in zip(seat_numbers, seat_names):
-            self.seats.append(Seat(number=i_seat_number, name=i_seat_name))
-        return
-
-    # States
-
-    @property
-    def state(self) -> 'TableState':
-        return self._state
-
-    @state.setter
-    def state(self, value) -> None:
-        self._state = value
-        self._state.table = self
-        return
-
-    def init_setup(self) -> None:
-        self.state.init_setup()
-        return
-
-    def prompt_user_and_execute(self) -> None:
-        self.state.prompt_user_and_execute()
-        return
-
-    # Misc
-
-    def __str__(self) -> str:
-        s = ''
-        for i_seat in self.seats:
-            s += f'Seat {i_seat.number} - {i_seat.name:5} - {i_seat.hand}\n'
-        return s
-
-
 class Seat(BaseClass):
 
     def __init__(self, number: int, name: str) -> None:
@@ -111,6 +51,66 @@ class Seat(BaseClass):
         self.verify_role(value=value)
         self._role = value
         return
+
+
+class Table(BaseClass):
+
+    def __init__(self) -> None:
+        self.state = PreFlop()
+        self.seats = []
+        self._populate_seats()
+        self.deck = common.cards.Deck()
+        return
+
+    # Seats
+
+    def get_seat_by_number(self, seat_number: int) -> Seat:
+        return self.state.get_seat_by_number(seat_number=seat_number)
+
+    def assign_role_to_seat(self, seat_number: int, role: str) -> None:
+        self.state.assign_role_to_seat(seat_number=seat_number, role=role)
+        return
+
+    def get_seats_by_role(self, role: Union[str, None]) -> list[Seat]:
+        return self.state.get_seats_by_role(role=role)
+
+    def get_hero_seat(self) -> Union[Seat, None]:
+        return self.state.get_hero_seat()
+
+    def _populate_seats(self) -> None:
+        seat_numbers = range(1, 10)
+        seat_names = ['UTG', 'UTG+1', 'UTG+2', 'LJ', 'HJ', 'CO', 'BTN', 'SB', 'BB']
+        for (i_seat_number, i_seat_name) in zip(seat_numbers, seat_names):
+            self.seats.append(Seat(number=i_seat_number, name=i_seat_name))
+        return
+
+    # States
+
+    @property
+    def state(self) -> 'TableState':
+        return self._state
+
+    @state.setter
+    def state(self, value) -> None:
+        self._state = value
+        self._state.table = self
+        return
+
+    def init_setup(self) -> None:
+        self.state.init_setup()
+        return
+
+    def prompt_user_and_execute(self) -> None:
+        self.state.prompt_user_and_execute()
+        return
+
+    # Misc
+
+    def __str__(self) -> str:
+        s = ''
+        for i_seat in self.seats:
+            s += f'Seat {i_seat.number} - {i_seat.name:5} - {i_seat.hand}\n'
+        return s
 
 
 class TableState(ABC):
