@@ -11,7 +11,7 @@ if __name__ == '__main__':
     t = table.Table()
     t.init_setup()
     while True:
-        t.prompt_user_and_execute()
+        t.run()
 
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/

@@ -100,8 +100,8 @@ class Table(BaseClass):
         self.state.init_setup()
         return
 
-    def prompt_user_and_execute(self) -> None:
-        self.state.prompt_user_and_execute()
+    def run(self) -> None:
+        self.state.run()
         return
 
     # Misc
@@ -180,7 +180,7 @@ class TableState(ABC):
         return
 
     @abstractmethod
-    def prompt_user_and_execute(self) -> None:
+    def run(self) -> None:
         pass
 
     @abstractmethod
@@ -213,7 +213,7 @@ class PreFlop(TableState):
         print(self.table)
         return
 
-    def prompt_user_and_execute(self) -> None:
+    def run(self) -> None:
         prompt_text = "1: Keep seat, change hand"
         prompt_text += "\nQ: Quit"
         prompt_text += "\n\n"
