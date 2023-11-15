@@ -64,9 +64,6 @@ class Table(BaseClass):
 
     # Seats
 
-    def get_seat_by_number(self, seat_number: int) -> Seat:
-        return self.state.get_seat_by_number(seat_number=seat_number)
-
     def assign_role_to_seat(self, seat_number: int, role: str) -> None:
         self.state.assign_role_to_seat(seat_number=seat_number, role=role)
         return
@@ -120,7 +117,7 @@ class TableState(ABC):
     # Deal Cards
 
     def deal(self, number_of_cards: int, seat_number: int) -> None:
-        seat = self.table.get_seat_by_number(seat_number=seat_number)
+        seat = self.get_seat_by_number(seat_number=seat_number)
         seat.hand = self.table.deck.deal_cards(number_of_cards=number_of_cards)
         return
 
