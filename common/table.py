@@ -23,16 +23,6 @@ class Table(BaseClass):
         self.deck = common.cards.Deck()
         return
 
-    # Deal Cards
-
-    def deal(self, number_of_cards: int, seat_number: int) -> None:
-        self.state.deal(number_of_cards=number_of_cards, seat_number=seat_number)
-        return
-
-    def return_heros_cards_to_deck(self) -> None:
-        self.state.return_heros_cards_to_deck()
-        return
-
     # Seats
 
     def get_seat_by_number(self, seat_number: int) -> 'Seat':
@@ -47,13 +37,6 @@ class Table(BaseClass):
 
     def get_hero_seat(self) -> Union['Seat', None]:
         return self.state.get_hero_seat()
-
-    def get_random_empty_seat(self) -> 'Seat':
-        return self.state.get_random_empty_seat()
-
-    def assign_hero_role_to_random_empty_seat(self) -> None:
-        self.state.assign_hero_role_to_random_empty_seat()
-        return
 
     def _populate_seats(self) -> None:
         seat_numbers = range(1, 10)
