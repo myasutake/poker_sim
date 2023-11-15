@@ -64,9 +64,6 @@ class Table(BaseClass):
 
     # Seats
 
-    def get_hero_seat(self) -> Union[Seat, None]:
-        return self.state.get_hero_seat()
-
     def _populate_seats(self) -> None:
         seat_numbers = range(1, 10)
         seat_names = ['UTG', 'UTG+1', 'UTG+2', 'LJ', 'HJ', 'CO', 'BTN', 'SB', 'BB']
