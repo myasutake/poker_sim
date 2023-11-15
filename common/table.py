@@ -64,10 +64,6 @@ class Table(BaseClass):
 
     # Seats
 
-    def assign_role_to_seat(self, seat_number: int, role: str) -> None:
-        self.state.assign_role_to_seat(seat_number=seat_number, role=role)
-        return
-
     def get_seats_by_role(self, role: Union[str, None]) -> list[Seat]:
         return self.state.get_seats_by_role(role=role)
 

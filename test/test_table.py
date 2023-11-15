@@ -55,14 +55,14 @@ class TestGetSeatsByRole:
     def test_seat_number(self, t):
         seat_number = 3
         role = 'H'
-        t.assign_role_to_seat(seat_number=seat_number, role=role)
+        t.state.assign_role_to_seat(seat_number=seat_number, role=role)
         seats = t.get_seats_by_role(role=role)
         assert seats[0].number == seat_number
 
     def test_seat_role(self, t):
         seat_number = 3
         role = 'H'
-        t.assign_role_to_seat(seat_number=seat_number, role=role)
+        t.state.assign_role_to_seat(seat_number=seat_number, role=role)
         seats = t.get_seats_by_role(role=role)
         assert seats[0].role == role
 
@@ -74,7 +74,7 @@ class TestGetSeatsByRole:
         seat_numbers = [1, 3, 6]
         role = 'V'
         for i_seat_number in seat_numbers:
-            t.assign_role_to_seat(seat_number=i_seat_number, role=role)
+            t.state.assign_role_to_seat(seat_number=i_seat_number, role=role)
         seats = t.get_seats_by_role(role=role)
         assert len(seats) == 3
 
@@ -88,7 +88,7 @@ class TestGetHeroSeat:
     def test_one_hero_seat_verify_seat_number(self, t):
         seat_number = 6
         role = 'H'
-        t.assign_role_to_seat(seat_number=seat_number, role=role)
+        t.state.assign_role_to_seat(seat_number=seat_number, role=role)
         seat = t.get_hero_seat()
         assert seat.number == seat_number
 
@@ -96,7 +96,7 @@ class TestGetHeroSeat:
         seat_numbers = [1, 2, 8]
         role = 'H'
         for i_seat_number in seat_numbers:
-            t.assign_role_to_seat(seat_number=i_seat_number, role=role)
+            t.state.assign_role_to_seat(seat_number=i_seat_number, role=role)
         try:
             t.get_hero_seat()
         except RuntimeError:
