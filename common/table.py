@@ -64,9 +64,6 @@ class Table(BaseClass):
 
     # Seats
 
-    def get_seats_by_role(self, role: Union[str, None]) -> list[Seat]:
-        return self.state.get_seats_by_role(role=role)
-
     def get_hero_seat(self) -> Union[Seat, None]:
         return self.state.get_hero_seat()
 

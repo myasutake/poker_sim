@@ -56,18 +56,18 @@ class TestGetSeatsByRole:
         seat_number = 3
         role = 'H'
         t.state.assign_role_to_seat(seat_number=seat_number, role=role)
-        seats = t.get_seats_by_role(role=role)
+        seats = t.state.get_seats_by_role(role=role)
         assert seats[0].number == seat_number
 
     def test_seat_role(self, t):
         seat_number = 3
         role = 'H'
         t.state.assign_role_to_seat(seat_number=seat_number, role=role)
-        seats = t.get_seats_by_role(role=role)
+        seats = t.state.get_seats_by_role(role=role)
         assert seats[0].role == role
 
     def test_no_hits(self, t):
-        seats = t.get_seats_by_role(role='H')
+        seats = t.state.get_seats_by_role(role='H')
         assert seats == []
 
     def test_multiple_hits(self, t):
@@ -75,7 +75,7 @@ class TestGetSeatsByRole:
         role = 'V'
         for i_seat_number in seat_numbers:
             t.state.assign_role_to_seat(seat_number=i_seat_number, role=role)
-        seats = t.get_seats_by_role(role=role)
+        seats = t.state.get_seats_by_role(role=role)
         assert len(seats) == 3
 
 
