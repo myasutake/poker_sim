@@ -56,7 +56,7 @@ class Seat(BaseClass):
 class Table(BaseClass):
 
     def __init__(self) -> None:
-        self.state = PreFlop()
+        self.state = Init()
         self.seats = []
         self._populate_seats()
         self.deck = common.cards.Deck()
@@ -81,10 +81,6 @@ class Table(BaseClass):
     def state(self, value) -> None:
         self._state = value
         self._state.table = self
-        return
-
-    def init_setup(self) -> None:
-        self.state.init_setup()
         return
 
     def run(self) -> None:
@@ -174,21 +170,21 @@ class TableState(ABC):
     def run(self) -> None:
         pass
 
-    @abstractmethod
-    def init_setup(self) -> None:
-        pass
+
+class Init(TableState):
+
+    def run(self) -> None:
+        self.assign_hero_role_to_random_empty_seat()
+        hero_seat = self.get_hero_seat()
+        self.deal(number_of_cards=2, seat_number=hero_seat.number)
+        print(self.table)
+        self.table.state = PreFlop()
+        return
 
 
 class PreFlop(TableState):
 
     # State Machine Methods
-
-    def init_setup(self) -> None:
-        self.assign_hero_role_to_random_empty_seat()
-        hero_seat = self.get_hero_seat()
-        self.deal(number_of_cards=2, seat_number=hero_seat.number)
-        print(self.table)
-        return
 
     def run(self) -> None:
         prompt_text = "1: Keep seat, change hand"
