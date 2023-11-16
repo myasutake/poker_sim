@@ -62,7 +62,60 @@ class Table(BaseClass):
         self.deck = common.cards.Deck()
         return
 
+    # Deal Cards
+
+    def deal(self, number_of_cards: int, seat_number: int) -> None:
+        seat = self.get_seat_by_number(seat_number=seat_number)
+        seat.hand = self.deck.deal_cards(number_of_cards=number_of_cards)
+        return
+
+    def return_heros_cards_to_deck(self) -> None:
+        seat = self.get_hero_seat()
+        for i_card in seat.hand:
+            self.deck.return_card_to_deck(card=i_card)
+        seat.hand = []
+        return
+
     # Seats
+
+    def get_seat_by_number(self, seat_number: int) -> Seat:
+        for i_seat in self.seats:
+            if i_seat.number == seat_number:
+                return i_seat
+        raise IndexError(f'Seat number {seat_number} not found.')
+
+    def get_seats_by_role(self, role: Union[str, None]) -> list[Seat]:
+        self.verify_role(value=role)
+
+        seats = []
+        for i_seat in self.seats:
+            if i_seat.role == role:
+                seats.append(i_seat)
+        return seats
+
+    def get_hero_seat(self) -> Union[Seat, None]:
+        seats = self.get_seats_by_role(role='H')
+        if len(seats) > 1:
+            raise RuntimeError(f"{len(seats)} seats found with role 'H'.")
+        if len(seats) == 1:
+            return seats[0]
+        return None
+
+    def get_random_empty_seat(self) -> Seat:
+        seats = self.get_seats_by_role(role=None)
+        return random.choice(seats)
+
+    def assign_role_to_seat(self, seat_number: int, role: str) -> None:
+        self.verify_role(value=role)
+
+        seat = self.get_seat_by_number(seat_number=seat_number)
+        seat.role = role
+        return
+
+    def assign_hero_role_to_random_empty_seat(self) -> None:
+        seat = self.get_random_empty_seat()
+        self.assign_role_to_seat(seat_number=seat.number, role='H')
+        return
 
     def _populate_seats(self) -> None:
         seat_numbers = range(1, 10)
@@ -100,61 +153,6 @@ class TableState(ABC):
 
     _table = None
 
-    # Deal Cards
-
-    def deal(self, number_of_cards: int, seat_number: int) -> None:
-        seat = self.get_seat_by_number(seat_number=seat_number)
-        seat.hand = self.table.deck.deal_cards(number_of_cards=number_of_cards)
-        return
-
-    def return_heros_cards_to_deck(self) -> None:
-        seat = self.get_hero_seat()
-        for i_card in seat.hand:
-            self.table.deck.return_card_to_deck(card=i_card)
-        seat.hand = []
-        return
-
-    # Seats
-
-    def get_seat_by_number(self, seat_number: int) -> Seat:
-        for i_seat in self.table.seats:
-            if i_seat.number == seat_number:
-                return i_seat
-        raise IndexError(f'Seat number {seat_number} not found.')
-
-    def get_seats_by_role(self, role: Union[str, None]) -> list[Seat]:
-        self.table.verify_role(value=role)
-
-        seats = []
-        for i_seat in self.table.seats:
-            if i_seat.role == role:
-                seats.append(i_seat)
-        return seats
-
-    def get_hero_seat(self) -> Union[Seat, None]:
-        seats = self.get_seats_by_role(role='H')
-        if len(seats) > 1:
-            raise RuntimeError(f"{len(seats)} seats found with role 'H'.")
-        if len(seats) == 1:
-            return seats[0]
-        return None
-
-    def get_random_empty_seat(self) -> Seat:
-        seats = self.get_seats_by_role(role=None)
-        return random.choice(seats)
-
-    def assign_role_to_seat(self, seat_number: int, role: str) -> None:
-        self.table.verify_role(value=role)
-
-        seat = self.get_seat_by_number(seat_number=seat_number)
-        seat.role = role
-        return
-
-    def assign_hero_role_to_random_empty_seat(self) -> None:
-        seat = self.get_random_empty_seat()
-        self.assign_role_to_seat(seat_number=seat.number, role='H')
-        return
-
     # State Machine Methods
 
     @property
@@ -174,9 +172,9 @@ class TableState(ABC):
 class Init(TableState):
 
     def run(self) -> None:
-        self.assign_hero_role_to_random_empty_seat()
-        hero_seat = self.get_hero_seat()
-        self.deal(number_of_cards=2, seat_number=hero_seat.number)
+        self.table.assign_hero_role_to_random_empty_seat()
+        hero_seat = self.table.get_hero_seat()
+        self.table.deal(number_of_cards=2, seat_number=hero_seat.number)
         print(self.table)
         self.table.state = PreFlop()
         return
@@ -202,9 +200,9 @@ class PreFlop(TableState):
             quit()
 
         if value == '1':
-            self.return_heros_cards_to_deck()
-            hero_seat = self.get_hero_seat()
-            self.deal(number_of_cards=2, seat_number=hero_seat.number)
+            self.table.return_heros_cards_to_deck()
+            hero_seat = self.table.get_hero_seat()
+            self.table.deal(number_of_cards=2, seat_number=hero_seat.number)
             print(self.table)
         return
 
