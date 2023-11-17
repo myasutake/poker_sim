@@ -62,7 +62,7 @@ class Table(BaseClass):
         self.deck = common.cards.Deck()
         return
 
-    # Deal Cards
+    # Cards
 
     def deal(self, number_of_cards: int, seat_number: int) -> None:
         seat = self.get_seat_by_number(seat_number=seat_number)
@@ -75,6 +75,10 @@ class Table(BaseClass):
             self.deck.return_card_to_deck(card=i_card)
         seat.hand = []
         return
+
+    def get_heros_hand(self) -> list[common.cards.Card]:
+        hero_seat = self.get_hero_seat()
+        return hero_seat.hand
 
     # Seats
 
