@@ -69,6 +69,16 @@ class Table(BaseClass):
         seat.hand = self.deck.deal_cards(number_of_cards=number_of_cards)
         return
 
+    def assign_hand_to_seat_number(self, hand: list[common.cards.Card], seat_number: int) -> None:
+        seat = self.get_seat_by_number(seat_number=seat_number)
+        seat.hand = hand
+        return
+
+    def unassign_hand_from_seat_number(self, seat_number: int) -> None:
+        seat = self.get_seat_by_number(seat_number=seat_number)
+        seat.hand = []
+        return
+
     def return_heros_cards_to_deck(self) -> None:
         seat = self.get_hero_seat()
         for i_card in seat.hand:
