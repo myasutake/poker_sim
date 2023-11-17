@@ -200,6 +200,7 @@ class PreFlop(TableState):
 
     def run(self) -> None:
         prompt_text = "1: Keep seat, change hand"
+        prompt_text += "\n2: Keep hand, change seat"
         prompt_text += "\nQ: Quit"
         prompt_text += "\n\n"
         print(prompt_text)
@@ -218,11 +219,24 @@ class PreFlop(TableState):
             hero_seat = self.table.get_hero_seat()
             self.table.deal(number_of_cards=2, seat_number=hero_seat.number)
             print(self.table)
+
+        if value == '2':
+            old_hero_seat = self.table.get_hero_seat()
+            new_hero_seat = self.table.get_random_empty_seat()
+            heros_hand = self.table.get_heros_hand()
+
+            self.table.assign_role_to_seat(seat_number=old_hero_seat.number, role=None)
+            self.table.assign_role_to_seat(seat_number=new_hero_seat.number, role='H')
+
+            self.table.unassign_hand_from_seat_number(seat_number=old_hero_seat.number)
+            self.table.assign_hand_to_seat_number(hand=heros_hand, seat_number=new_hero_seat.number)
+
+            print(self.table)
         return
 
     @staticmethod
     def _validate_input(value: str) -> bool:
-        if value.upper() in ['1', 'Q']:
+        if value.upper() in ['1', '2', 'Q']:
             return True
         print("Invalid input.")
         return False
