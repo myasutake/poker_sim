@@ -119,7 +119,7 @@ class Table(BaseClass):
         seats = self.get_seats_by_role(role=None)
         return random.choice(seats)
 
-    def assign_role_to_seat(self, seat_number: int, role: str) -> None:
+    def assign_role_to_seat(self, seat_number: int, role: Union[str, None]) -> None:
         self.verify_role(value=role)
 
         seat = self.get_seat_by_number(seat_number=seat_number)
