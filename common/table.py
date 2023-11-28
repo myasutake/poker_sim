@@ -224,6 +224,12 @@ class TableState(ABC):
 
 
 class Init(TableState):
+    """
+    TableState representing the Init state.
+
+    I felt it easier to execute this code in a dedicated state as opposed to
+    Table.__init__(). See flow chart.
+    """
 
     def run(self) -> None:
         self.table.assign_hero_role_to_random_empty_seat()
