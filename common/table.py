@@ -199,7 +199,7 @@ class Table(BaseClass):
     def __str__(self) -> str:
         s = ''
         for i_seat in self.seats:
-            s += f'Seat {i_seat.number} - {i_seat.name:5} - {i_seat.hand}\n'
+            s += f'Seat {i_seat.number} - {i_seat.name:5} - {i_seat.role or " "} - {i_seat.hand}\n'
         return s
 
 
