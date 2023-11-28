@@ -66,6 +66,21 @@ class Seat(BaseClass):
 
 
 class Table(BaseClass):
+    """
+    This class represents a poker table.
+
+    Also represents the dealer (i.e. any dealer actions would be defined here).
+
+    This class is also run as a finite state machine. This class has a specific
+    state (represented by a TableState subclass) and interacts with them via the
+    state interface (TableClass class).
+
+    Attributes:
+        state: A TableState subclass indicating which state the Table is
+          currently in.
+        seats: A list of Seat objects at the Table.
+        deck: A Deck object used at the Table.
+    """
 
     def __init__(self) -> None:
         self.state = Init()
@@ -154,6 +169,13 @@ class Table(BaseClass):
 
     @property
     def state(self) -> 'TableState':
+        """
+        Getter/setter methods for state property.
+
+        The setter method, in addition to the obvious (setting the Table's
+        state), also sets the TableState's reference to the Table itself so that
+        the TableState can access any Table's methods.
+        """
         return self._state
 
     @state.setter
@@ -163,6 +185,12 @@ class Table(BaseClass):
         return
 
     def run(self) -> None:
+        """
+        This function executes the next step, depending on the Table's state.
+
+        Because this is state-specific, this method is defined for each
+        TableState subclass.
+        """
         self.state.run()
         return
 
