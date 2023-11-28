@@ -96,13 +96,13 @@ class Table(BaseClass):
         seat.hand = self.deck.deal_cards(number_of_cards=number_of_cards)
         return
 
-    def assign_hand_to_seat_number(self, hand: list[common.cards.Card], seat_number: int) -> None:
-        seat = self.get_seat_by_number(seat_number=seat_number)
+    @staticmethod
+    def assign_hand_to_seat(hand: list[common.cards.Card], seat: Seat) -> None:
         seat.hand = hand
         return
 
-    def unassign_hand_from_seat_number(self, seat_number: int) -> None:
-        seat = self.get_seat_by_number(seat_number=seat_number)
+    @staticmethod
+    def unassign_hand_from_seat(seat: Seat) -> None:
         seat.hand = []
         return
 
@@ -274,8 +274,8 @@ class PreFlop(TableState):
             self.table.assign_role_to_seat(seat_number=old_hero_seat.number, role=None)
             self.table.assign_role_to_seat(seat_number=new_hero_seat.number, role='H')
 
-            self.table.unassign_hand_from_seat_number(seat_number=old_hero_seat.number)
-            self.table.assign_hand_to_seat_number(hand=heros_hand, seat_number=new_hero_seat.number)
+            self.table.unassign_hand_from_seat(seat=old_hero_seat)
+            self.table.assign_hand_to_seat(hand=heros_hand, seat=new_hero_seat)
 
             print(self.table)
         return
