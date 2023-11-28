@@ -158,6 +158,11 @@ class Table(BaseClass):
         self.assign_role_to_seat(seat_number=seat.number, role='H')
         return
 
+    def assign_villain_role_to_random_empty_seat(self) -> None:
+        seat = self.get_random_empty_seat()
+        self.assign_role_to_seat(seat_number=seat.number, role='V')
+        return
+
     def _populate_seats(self) -> None:
         seat_numbers = range(1, 10)
         seat_names = ['UTG', 'UTG+1', 'UTG+2', 'LJ', 'HJ', 'CO', 'BTN', 'SB', 'BB']
@@ -233,6 +238,7 @@ class Init(TableState):
 
     def run(self) -> None:
         self.table.assign_hero_role_to_random_empty_seat()
+        self.table.assign_villain_role_to_random_empty_seat()
         hero_seat = self.table.get_hero_seat()
         self.table.deal(number_of_cards=2, seat_number=hero_seat.number)
         print(self.table)
