@@ -1,3 +1,6 @@
+"""
+This module contains classes for the Table and its Seats.
+"""
 from abc import ABC, abstractmethod
 import random
 from typing import Union
@@ -15,6 +18,15 @@ class BaseClass:
 
 
 class Seat(BaseClass):
+    """
+    This class represents each seat at the table.
+
+    Attributes:
+        number: An integer identifying the seat number. Unique per table.
+        name: A string identifying the seat position relative to the button.
+        hand: A list of two Card objects dealt to the seat.
+        role: A string indicating who is occupying the seat.
+    """
 
     def __init__(self, number: int, name: str) -> None:
         self._number = number
