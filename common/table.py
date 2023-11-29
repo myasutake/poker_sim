@@ -268,7 +268,6 @@ class PreFlop(TableState):
             self.table.return_heros_cards_to_deck()
             hero_seat = self.table.get_hero_seat()
             self.table.deal(number_of_cards=2, seat_number=hero_seat.number)
-            print(self.table)
 
         if value == '2':
             old_hero_seat = self.table.get_hero_seat()
@@ -281,7 +280,7 @@ class PreFlop(TableState):
             self.table.unassign_hand_from_seat(seat=old_hero_seat)
             self.table.assign_hand_to_seat(hand=heros_hand, seat=new_hero_seat)
 
-            print(self.table)
+        print(self.table)
         return
 
     @staticmethod
