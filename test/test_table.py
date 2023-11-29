@@ -110,3 +110,33 @@ class TestGetHeroSeat:
             assert False, 'Wrong exception raised.'
         else:
             assert False, 'No exception raised.'
+
+
+class TestGetVillainSeat:
+
+    def test_no_villain_seat(self, t):
+        seat = t.get_villain_seat()
+        assert seat is None
+
+    def test_one_hero_seat_verify_seat_number(self, t):
+        seat_number = 7
+        role = 'V'
+        seat = t.get_seat_by_number(seat_number=seat_number)
+        t.assign_role_to_seat(seat=seat, role=role)
+        seat = t.get_villain_seat()
+        assert seat.number == seat_number
+
+    def test_multiple_hero_seats_raises_exception(self, t):
+        seat_numbers = [2, 6, 9]
+        role = 'V'
+        for i_seat_number in seat_numbers:
+            i_seat = t.get_seat_by_number(seat_number=i_seat_number)
+            t.assign_role_to_seat(seat=i_seat, role=role)
+        try:
+            t.get_villain_seat()
+        except RuntimeError:
+            pass
+        except:
+            assert False, 'Wrong exception raised.'
+        else:
+            assert False, 'No exception raised.'
