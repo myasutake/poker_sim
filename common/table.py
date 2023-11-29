@@ -146,21 +146,19 @@ class Table(BaseClass):
         seats = self.get_seats_by_role(role=None)
         return random.choice(seats)
 
-    def assign_role_to_seat(self, seat_number: int, role: Union[str, None]) -> None:
+    def assign_role_to_seat(self, seat: Seat, role: Union[str, None]) -> None:
         self.verify_role(value=role)
-
-        seat = self.get_seat_by_number(seat_number=seat_number)
         seat.role = role
         return
 
     def assign_hero_role_to_random_empty_seat(self) -> None:
         seat = self.get_random_empty_seat()
-        self.assign_role_to_seat(seat_number=seat.number, role='H')
+        self.assign_role_to_seat(seat=seat, role='H')
         return
 
     def assign_villain_role_to_random_empty_seat(self) -> None:
         seat = self.get_random_empty_seat()
-        self.assign_role_to_seat(seat_number=seat.number, role='V')
+        self.assign_role_to_seat(seat=seat, role='V')
         return
 
     def _populate_seats(self) -> None:
@@ -277,8 +275,8 @@ class PreFlop(TableState):
             new_hero_seat = self.table.get_random_empty_seat()
             heros_hand = self.table.get_heros_hand()
 
-            self.table.assign_role_to_seat(seat_number=old_hero_seat.number, role=None)
-            self.table.assign_role_to_seat(seat_number=new_hero_seat.number, role='H')
+            self.table.assign_role_to_seat(seat=old_hero_seat, role=None)
+            self.table.assign_role_to_seat(seat=new_hero_seat, role='H')
 
             self.table.unassign_hand_from_seat(seat=old_hero_seat)
             self.table.assign_hand_to_seat(hand=heros_hand, seat=new_hero_seat)
