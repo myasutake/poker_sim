@@ -260,6 +260,7 @@ class PreFlop(TableState):
         prompt_text = "1: Hero: Keep seat, change hand"
         prompt_text += "\n2: Hero: Keep hand, change seat"
         prompt_text += "\n3: Villain: Change seat"
+        prompt_text += "\nS: Start over"
         prompt_text += "\nQ: Quit"
         prompt_text += "\n\n"
         print(prompt_text)
@@ -272,6 +273,9 @@ class PreFlop(TableState):
 
         if value == 'Q':
             quit()
+
+        if value == 'S':
+            self.table.__init__()
 
         if value == '1':
             self.table.return_heros_cards_to_deck()
@@ -301,7 +305,7 @@ class PreFlop(TableState):
 
     @staticmethod
     def _validate_input(value: str) -> bool:
-        if value.upper() in ['1', '2', '3', 'Q']:
+        if value.upper() in ['1', '2', '3', 'S', 'Q']:
             return True
         print("Invalid input.")
         return False
