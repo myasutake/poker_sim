@@ -257,8 +257,9 @@ class PreFlop(TableState):
     # State Machine Methods
 
     def run(self) -> None:
-        prompt_text = "1: Keep seat, change hand"
-        prompt_text += "\n2: Keep hand, change seat"
+        prompt_text = "1: Hero: Keep seat, change hand"
+        prompt_text += "\n2: Hero: Keep hand, change seat"
+        prompt_text += "\n3: Villain: Change seat"
         prompt_text += "\nQ: Quit"
         prompt_text += "\n\n"
         print(prompt_text)
@@ -288,12 +289,19 @@ class PreFlop(TableState):
             self.table.unassign_hand_from_seat(seat=old_hero_seat)
             self.table.assign_hand_to_seat(hand=heros_hand, seat=new_hero_seat)
 
+        if value == '3':
+            old_villain_seat = self.table.get_villain_seat()
+            new_villain_seat = self.table.get_random_empty_seat()
+
+            self.table.assign_role_to_seat(seat=old_villain_seat, role=None)
+            self.table.assign_role_to_seat(seat=new_villain_seat, role='V')
+
         print(self.table)
         return
 
     @staticmethod
     def _validate_input(value: str) -> bool:
-        if value.upper() in ['1', '2', 'Q']:
+        if value.upper() in ['1', '2', '3', 'Q']:
             return True
         print("Invalid input.")
         return False
