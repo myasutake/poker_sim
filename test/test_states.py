@@ -30,6 +30,14 @@ class TestInit:
 
 class TestPreFlop:
 
+    # Table properties
+
+    @staticmethod
+    def test_deck_stub_has_50_cards(table_preflop):
+        assert table_preflop.deck.number_of_cards_not_dealt == 50
+
+    # State transitions
+
     @staticmethod
     def test_hero_change_hand_transitions_to_preflop(monkeypatch, table_preflop):
         # Monkeypatch the input(), simulate user intput "1":
