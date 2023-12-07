@@ -15,6 +15,16 @@ def table_preflop(table_init) -> common.table.Table():
     return table
 
 
+@pytest.fixture(scope='function')
+def table_preflop_after_hero_hand_change(monkeypatch, table_preflop) -> common.table.Table():
+    table = table_preflop
+
+    monkeypatch.setattr('builtins.input', lambda _: "1")
+    table.run()
+
+    return table
+
+
 class TestInit:
 
     @staticmethod
@@ -62,3 +72,10 @@ class TestPreFlop:
         table = table_preflop
         table.run()
         assert type(table.state) == common.table.PreFlop
+
+
+class TestPreFlopAfterHeroHandChange:
+
+    @staticmethod
+    def test_deck_stub_has_50_cards(table_preflop_after_hero_hand_change):
+        assert table_preflop_after_hero_hand_change.deck.number_of_cards_not_dealt == 50
