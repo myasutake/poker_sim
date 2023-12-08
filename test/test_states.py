@@ -38,6 +38,16 @@ def table_preflop_after_hero_hand_change(monkeypatch, table_preflop) -> common.t
     return table
 
 
+@pytest.fixture(scope='function')
+def table_flop(monkeypatch, table_preflop) -> common.table.Table():
+    table = table_preflop
+
+    monkeypatch.setattr('builtins.input', lambda _: "F")
+    table.run()
+
+    return table
+
+
 class TestInit:
 
     @staticmethod
@@ -101,9 +111,24 @@ class TestPreFlop:
         table.run()
         assert type(table.state) == common.table.PreFlop
 
+    @staticmethod
+    def test_flop_transitions_to_flop(monkeypatch, table_preflop):
+        monkeypatch.setattr('builtins.input', lambda _: "F")
+
+        table = table_preflop
+        table.run()
+        assert type(table.state) == common.table.Flop
+
 
 class TestPreFlopAfterHeroHandChange:
 
     @staticmethod
     def test_deck_stub_has_50_cards(table_preflop_after_hero_hand_change):
         assert table_preflop_after_hero_hand_change.deck.number_of_cards_not_dealt == 50
+
+
+class TestFlop:
+
+    @staticmethod
+    def test_deck_stub_has_47_cards(table_flop):
+        assert table_flop.deck.number_of_cards_not_dealt == 47
