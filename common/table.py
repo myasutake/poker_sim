@@ -91,7 +91,7 @@ class Table(BaseClass):
 
     # Cards
 
-    def deal(self, number_of_cards: int, seat_number: int) -> None:
+    def deal_to_seat(self, number_of_cards: int, seat_number: int) -> None:
         seat = self.get_seat_by_number(seat_number=seat_number)
         seat.hand = self.deck.deal_cards(number_of_cards=number_of_cards)
         return
@@ -246,7 +246,7 @@ class Init(TableState):
         self.table.assign_hero_role_to_random_empty_seat()
         self.table.assign_villain_role_to_random_empty_seat()
         hero_seat = self.table.get_hero_seat()
-        self.table.deal(number_of_cards=2, seat_number=hero_seat.number)
+        self.table.deal_to_seat(number_of_cards=2, seat_number=hero_seat.number)
         print(self.table)
         self.table.state = PreFlop()
         return
@@ -280,7 +280,7 @@ class PreFlop(TableState):
         if value == '1':
             self.table.return_heros_cards_to_deck()
             hero_seat = self.table.get_hero_seat()
-            self.table.deal(number_of_cards=2, seat_number=hero_seat.number)
+            self.table.deal_to_seat(number_of_cards=2, seat_number=hero_seat.number)
 
         if value == '2':
             old_hero_seat = self.table.get_hero_seat()
