@@ -87,6 +87,7 @@ class Table(BaseClass):
         self.seats = []
         self._populate_seats()
         self.deck = common.cards.Deck()
+        self.flop = []
         return
 
     # Cards
@@ -116,6 +117,10 @@ class Table(BaseClass):
     def get_heros_hand(self) -> list[common.cards.Card]:
         hero_seat = self.get_hero_seat()
         return hero_seat.hand
+
+    def deal_flop(self) -> None:
+        self.flop = self.deck.deal_cards(number_of_cards=3)
+        return
 
     # Seats
 
@@ -211,6 +216,7 @@ class Table(BaseClass):
         s = ''
         for i_seat in self.seats:
             s += f'Seat {i_seat.number} - {i_seat.name:5} - {i_seat.role or " "} - {i_seat.hand}\n'
+        s += f'\nBoard: {self.flop}\n'
         return s
 
 
@@ -260,7 +266,8 @@ class PreFlop(TableState):
         prompt_text = "1: Hero: Keep seat, change hand"
         prompt_text += "\n2: Hero: Keep hand, change seat"
         prompt_text += "\n3: Villain: Change seat"
-        prompt_text += "\nS: Start over"
+        prompt_text += "\nF: Deal the flop"
+        prompt_text += "\n\nS: Start over"
         prompt_text += "\nQ: Quit"
         prompt_text += "\n\n"
         print(prompt_text)
@@ -300,12 +307,44 @@ class PreFlop(TableState):
             self.table.assign_role_to_seat(seat=old_villain_seat, role=None)
             self.table.assign_role_to_seat(seat=new_villain_seat, role='V')
 
+        if value == 'F':
+            self.table.deal_flop()
+            self.table.state = Flop()
+
         print(self.table)
         return
 
     @staticmethod
     def _validate_input(value: str) -> bool:
-        if value.upper() in ['1', '2', '3', 'S', 'Q']:
+        if value.upper() in ['1', '2', '3', 'F', 'S', 'Q']:
+            return True
+        print("Invalid input.")
+        return False
+
+
+class Flop(TableState):
+
+    def run(self) -> None:
+        prompt_text = "S: Start over"
+        prompt_text += "\nQ: Quit"
+        prompt_text += "\n\n"
+        print(prompt_text)
+
+        value = None
+        input_is_valid = False
+        while not input_is_valid:
+            value = input("> ").upper()
+            input_is_valid = self._validate_input(value=value)
+
+        if value == 'Q':
+            quit()
+
+        if value == 'S':
+            self.table.__init__()
+
+    @staticmethod
+    def _validate_input(value: str) -> bool:
+        if value.upper() in ['S', 'Q']:
             return True
         print("Invalid input.")
         return False
