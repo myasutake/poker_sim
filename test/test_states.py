@@ -58,6 +58,16 @@ def table_flop(monkeypatch, table_preflop) -> common.table.Table():
     return table
 
 
+@pytest.fixture(scope='function')
+def table_flop_after_reflop(monkeypatch, table_flop) -> common.table.Table():
+    table = table_flop
+
+    monkeypatch.setattr('builtins.input', lambda _: prompt_options['FLOP'])
+    table.run()
+
+    return table
+
+
 class TestInit:
 
     @staticmethod
@@ -142,3 +152,10 @@ class TestFlop:
     @staticmethod
     def test_deck_stub_has_47_cards(table_flop):
         assert table_flop.deck.number_of_cards_not_dealt == 47
+
+
+class TestFlopAfterReFlop:
+
+    @staticmethod
+    def test_deck_stub_has_47_cards(table_flop_after_reflop):
+        assert table_flop_after_reflop.deck.number_of_cards_not_dealt == 47
