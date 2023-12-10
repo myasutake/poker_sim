@@ -3,6 +3,16 @@ import pytest
 import common.table
 
 
+prompt_options = {
+    'START_OVER': 'N',
+    'QUIT': 'Q',
+    'HERO_CHANGE_HAND': 'H',
+    'HERO_CHANGE_SEAT': 'S',
+    'VILLAIN_CHANGE_SEAT': 'V',
+    'FLOP': 'F',
+}
+
+
 @pytest.fixture(scope='function')
 def table_init() -> common.table.Table():
     return common.table.Table()
@@ -19,7 +29,7 @@ def table_preflop(table_init) -> common.table.Table():
 def table_preflop_after_start_over(monkeypatch, table_preflop) -> common.table.Table():
     table = table_preflop
 
-    monkeypatch.setattr('builtins.input', lambda _: "S")
+    monkeypatch.setattr('builtins.input', lambda _: prompt_options['START_OVER'])
     table.run()
     # table is now in Init state
     table.run()
@@ -32,7 +42,7 @@ def table_preflop_after_start_over(monkeypatch, table_preflop) -> common.table.T
 def table_preflop_after_hero_hand_change(monkeypatch, table_preflop) -> common.table.Table():
     table = table_preflop
 
-    monkeypatch.setattr('builtins.input', lambda _: "1")
+    monkeypatch.setattr('builtins.input', lambda _: prompt_options['HERO_CHANGE_HAND'])
     table.run()
 
     return table
@@ -42,7 +52,7 @@ def table_preflop_after_hero_hand_change(monkeypatch, table_preflop) -> common.t
 def table_flop(monkeypatch, table_preflop) -> common.table.Table():
     table = table_preflop
 
-    monkeypatch.setattr('builtins.input', lambda _: "F")
+    monkeypatch.setattr('builtins.input', lambda _: prompt_options['FLOP'])
     table.run()
 
     return table
@@ -80,7 +90,7 @@ class TestPreFlop:
 
     @staticmethod
     def test_start_over_transitions_to_init(monkeypatch, table_preflop):
-        monkeypatch.setattr('builtins.input', lambda _: "S")
+        monkeypatch.setattr('builtins.input', lambda _: prompt_options['START_OVER'])
 
         table = table_preflop
         table.run()
@@ -89,7 +99,7 @@ class TestPreFlop:
     @staticmethod
     def test_hero_change_hand_transitions_to_preflop(monkeypatch, table_preflop):
         # Monkeypatch the input(), simulate user intput "1":
-        monkeypatch.setattr('builtins.input', lambda _: "1")
+        monkeypatch.setattr('builtins.input', lambda _: prompt_options['HERO_CHANGE_HAND'])
 
         table = table_preflop
         table.run()
@@ -97,7 +107,7 @@ class TestPreFlop:
 
     @staticmethod
     def test_hero_change_seat_transitions_to_preflop(monkeypatch, table_preflop):
-        monkeypatch.setattr('builtins.input', lambda _: "2")
+        monkeypatch.setattr('builtins.input', lambda _: prompt_options['HERO_CHANGE_SEAT'])
 
         table = table_preflop
         table.run()
@@ -105,7 +115,7 @@ class TestPreFlop:
 
     @staticmethod
     def test_villain_change_seat_transitions_to_preflop(monkeypatch, table_preflop):
-        monkeypatch.setattr('builtins.input', lambda _: "3")
+        monkeypatch.setattr('builtins.input', lambda _: prompt_options['VILLAIN_CHANGE_SEAT'])
 
         table = table_preflop
         table.run()
@@ -113,7 +123,7 @@ class TestPreFlop:
 
     @staticmethod
     def test_flop_transitions_to_flop(monkeypatch, table_preflop):
-        monkeypatch.setattr('builtins.input', lambda _: "F")
+        monkeypatch.setattr('builtins.input', lambda _: prompt_options['FLOP'])
 
         table = table_preflop
         table.run()
