@@ -87,10 +87,19 @@ class Table(BaseClass):
         self.seats = []
         self._populate_seats()
         self.deck = common.cards.Deck()
-        self.flop = []
+        self._flop = []
         return
 
     # Cards
+
+    @property
+    def flop(self) -> list[common.cards.Card]:
+        return self._flop
+
+    @flop.setter
+    def flop(self, cards: list[common.cards.Card]) -> None:
+        self._flop = cards
+        return
 
     def deal_to_seat(self, number_of_cards: int, seat_number: int) -> None:
         seat = self.get_seat_by_number(seat_number=seat_number)
