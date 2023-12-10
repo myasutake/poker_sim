@@ -116,10 +116,14 @@ class Table(BaseClass):
         seat.hand = []
         return
 
+    def return_cards_to_deck(self, cards: list[common.cards.Card]) -> None:
+        for i_card in cards:
+            self.deck.return_card_to_deck(card=i_card)
+        return
+
     def return_heros_cards_to_deck(self) -> None:
         seat = self.get_hero_seat()
-        for i_card in seat.hand:
-            self.deck.return_card_to_deck(card=i_card)
+        self.return_cards_to_deck(cards=seat.hand)
         seat.hand = []
         return
 
