@@ -127,6 +127,11 @@ class Table(BaseClass):
         seat.hand = []
         return
 
+    def return_flop_to_deck(self) -> None:
+        self.return_cards_to_deck(cards=self.flop)
+        self.flop = []
+        return
+
     def get_heros_hand(self) -> list[common.cards.Card]:
         hero_seat = self.get_hero_seat()
         return hero_seat.hand
@@ -338,7 +343,8 @@ class PreFlop(TableState):
 class Flop(TableState):
 
     def run(self) -> None:
-        prompt_text = "N: Start over"
+        prompt_text = "F: Re-deal the flop"
+        prompt_text += "\nN: Start Over"
         prompt_text += "\nQ: Quit"
         prompt_text += "\n\n"
         print(prompt_text)
@@ -355,9 +361,15 @@ class Flop(TableState):
         if value == 'N':
             self.table.__init__()
 
+        if value == 'F':
+            self.table.return_flop_to_deck()
+            self.table.deal_flop()
+
+        print(self.table)
+
     @staticmethod
     def _validate_input(value: str) -> bool:
-        if value.upper() in ['N', 'Q']:
+        if value.upper() in ['F', 'N', 'Q']:
             return True
         print("Invalid input.")
         return False
