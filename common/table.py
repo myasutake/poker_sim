@@ -258,6 +258,27 @@ class TableState(ABC):
         pass
 
 
+class TableStateWithUserInput(TableState, ABC):
+
+    def __init__(self):
+        return
+
+    @abstractmethod
+    def run(self) -> None:
+        pass
+
+    @property
+    @abstractmethod
+    def valid_inputs(self) -> list[str]:
+        pass
+
+    def _validate_input(self, value: str) -> bool:
+        if value.upper() in self.valid_inputs:
+            return True
+        print("Invalid input.")
+        return False
+
+
 class Init(TableState):
     """
     TableState representing the Init state.
