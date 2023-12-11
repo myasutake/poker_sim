@@ -277,6 +277,25 @@ class TableStateWithUserInput(TableState, ABC):
     def user_prompt(self) -> str:
         pass
 
+    def get_user_input_and_run_common_commands(self) -> str:
+        print(self.table)
+
+        print(self.user_prompt)
+
+        value = None
+        input_is_valid = False
+        while not input_is_valid:
+            value = input("> ").upper()
+            input_is_valid = self._validate_input(value=value)
+
+        if value == 'Q':
+            quit()
+
+        if value == 'N':
+            self.table.__init__()
+
+        return value
+
     def _validate_input(self, value: str) -> bool:
         if value.upper() in self.valid_inputs:
             return True
@@ -321,21 +340,7 @@ class PreFlop(TableStateWithUserInput):
     # State Machine Methods
 
     def run(self) -> None:
-        print(self.table)
-
-        print(self.user_prompt)
-
-        value = None
-        input_is_valid = False
-        while not input_is_valid:
-            value = input("> ").upper()
-            input_is_valid = self._validate_input(value=value)
-
-        if value == 'Q':
-            quit()
-
-        if value == 'N':
-            self.table.__init__()
+        value = self.get_user_input_and_run_common_commands()
 
         if value == 'H':
             self.table.return_heros_cards_to_deck()
@@ -382,21 +387,7 @@ class Flop(TableStateWithUserInput):
         return prompt_text
 
     def run(self) -> None:
-        print(self.table)
-
-        print(self.user_prompt)
-
-        value = None
-        input_is_valid = False
-        while not input_is_valid:
-            value = input("> ").upper()
-            input_is_valid = self._validate_input(value=value)
-
-        if value == 'Q':
-            quit()
-
-        if value == 'N':
-            self.table.__init__()
+        value = self.get_user_input_and_run_common_commands()
 
         if value == 'F':
             self.table.return_flop_to_deck()
