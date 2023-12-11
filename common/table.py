@@ -282,19 +282,19 @@ class TableStateWithUserInput(TableState, ABC):
 
         print(self.user_prompt)
 
-        value = None
+        user_input = None
         input_is_valid = False
         while not input_is_valid:
-            value = input("> ").upper()
-            input_is_valid = self._validate_input(value=value)
+            user_input = input("> ").upper()
+            input_is_valid = self._validate_input(value=user_input)
 
-        if value == 'Q':
+        if user_input == 'Q':
             quit()
 
-        if value == 'N':
+        if user_input == 'N':
             self.table.__init__()
 
-        return value
+        return user_input
 
     def _validate_input(self, value: str) -> bool:
         if value.upper() in self.valid_inputs:
@@ -340,14 +340,14 @@ class PreFlop(TableStateWithUserInput):
     # State Machine Methods
 
     def run(self) -> None:
-        value = self.get_user_input_and_run_common_commands()
+        user_input = self.get_user_input_and_run_common_commands()
 
-        if value == 'H':
+        if user_input == 'H':
             self.table.return_heros_cards_to_deck()
             hero_seat = self.table.get_hero_seat()
             self.table.deal_to_seat(number_of_cards=2, seat_number=hero_seat.number)
 
-        if value == 'S':
+        if user_input == 'S':
             old_hero_seat = self.table.get_hero_seat()
             new_hero_seat = self.table.get_random_empty_seat()
             heros_hand = self.table.get_heros_hand()
@@ -358,14 +358,14 @@ class PreFlop(TableStateWithUserInput):
             self.table.unassign_hand_from_seat(seat=old_hero_seat)
             self.table.assign_hand_to_seat(hand=heros_hand, seat=new_hero_seat)
 
-        if value == 'V':
+        if user_input == 'V':
             old_villain_seat = self.table.get_villain_seat()
             new_villain_seat = self.table.get_random_empty_seat()
 
             self.table.assign_role_to_seat(seat=old_villain_seat, role=None)
             self.table.assign_role_to_seat(seat=new_villain_seat, role='V')
 
-        if value == 'F':
+        if user_input == 'F':
             self.table.deal_flop()
             self.table.state = Flop()
 
@@ -387,9 +387,9 @@ class Flop(TableStateWithUserInput):
         return prompt_text
 
     def run(self) -> None:
-        value = self.get_user_input_and_run_common_commands()
+        user_input = self.get_user_input_and_run_common_commands()
 
-        if value == 'F':
+        if user_input == 'F':
             self.table.return_flop_to_deck()
             self.table.deal_flop()
 
