@@ -272,6 +272,11 @@ class TableStateWithUserInput(TableState, ABC):
     def valid_inputs(self) -> list[str]:
         pass
 
+    @property
+    @abstractmethod
+    def user_prompt(self) -> str:
+        pass
+
     def _validate_input(self, value: str) -> bool:
         if value.upper() in self.valid_inputs:
             return True
@@ -302,11 +307,8 @@ class PreFlop(TableStateWithUserInput):
     def valid_inputs(self) -> list[str]:
         return ['H', 'S', 'V', 'F', 'N', 'Q']
 
-    # State Machine Methods
-
-    def run(self) -> None:
-        print(self.table)
-
+    @property
+    def user_prompt(self) -> str:
         prompt_text = "H: Hero: Keep seat, change hand"
         prompt_text += "\nS: Hero: Keep hand, change seat"
         prompt_text += "\nV: Villain: Change seat"
@@ -314,7 +316,14 @@ class PreFlop(TableStateWithUserInput):
         prompt_text += "\n\nN: Start over"
         prompt_text += "\nQ: Quit"
         prompt_text += "\n\n"
-        print(prompt_text)
+        return prompt_text
+
+    # State Machine Methods
+
+    def run(self) -> None:
+        print(self.table)
+
+        print(self.user_prompt)
 
         value = None
         input_is_valid = False
@@ -364,14 +373,18 @@ class Flop(TableStateWithUserInput):
     def valid_inputs(self) -> list[str]:
         return ['F', 'N', 'Q']
 
-    def run(self) -> None:
-        print(self.table)
-
+    @property
+    def user_prompt(self) -> str:
         prompt_text = "F: Re-deal the flop"
         prompt_text += "\nN: Start Over"
         prompt_text += "\nQ: Quit"
         prompt_text += "\n\n"
-        print(prompt_text)
+        return prompt_text
+
+    def run(self) -> None:
+        print(self.table)
+
+        print(self.user_prompt)
 
         value = None
         input_is_valid = False
