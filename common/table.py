@@ -292,7 +292,6 @@ class Init(TableState):
         self.table.assign_villain_role_to_random_empty_seat()
         hero_seat = self.table.get_hero_seat()
         self.table.deal_to_seat(number_of_cards=2, seat_number=hero_seat.number)
-        print(self.table)
         self.table.state = PreFlop()
         return
 
@@ -306,6 +305,8 @@ class PreFlop(TableStateWithUserInput):
     # State Machine Methods
 
     def run(self) -> None:
+        print(self.table)
+
         prompt_text = "H: Hero: Keep seat, change hand"
         prompt_text += "\nS: Hero: Keep hand, change seat"
         prompt_text += "\nV: Villain: Change seat"
@@ -354,7 +355,6 @@ class PreFlop(TableStateWithUserInput):
             self.table.deal_flop()
             self.table.state = Flop()
 
-        print(self.table)
         return
 
 
@@ -365,6 +365,8 @@ class Flop(TableStateWithUserInput):
         return ['F', 'N', 'Q']
 
     def run(self) -> None:
+        print(self.table)
+
         prompt_text = "F: Re-deal the flop"
         prompt_text += "\nN: Start Over"
         prompt_text += "\nQ: Quit"
@@ -387,4 +389,4 @@ class Flop(TableStateWithUserInput):
             self.table.return_flop_to_deck()
             self.table.deal_flop()
 
-        print(self.table)
+        return
