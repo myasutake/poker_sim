@@ -297,7 +297,11 @@ class Init(TableState):
         return
 
 
-class PreFlop(TableState):
+class PreFlop(TableStateWithUserInput):
+
+    @property
+    def valid_inputs(self) -> list[str]:
+        return ['H', 'S', 'V', 'F', 'N', 'Q']
 
     # State Machine Methods
 
@@ -353,15 +357,12 @@ class PreFlop(TableState):
         print(self.table)
         return
 
-    @staticmethod
-    def _validate_input(value: str) -> bool:
-        if value.upper() in ['H', 'S', 'V', 'F', 'N', 'Q']:
-            return True
-        print("Invalid input.")
-        return False
 
+class Flop(TableStateWithUserInput):
 
-class Flop(TableState):
+    @property
+    def valid_inputs(self) -> list[str]:
+        return ['F', 'N', 'Q']
 
     def run(self) -> None:
         prompt_text = "F: Re-deal the flop"
@@ -387,10 +388,3 @@ class Flop(TableState):
             self.table.deal_flop()
 
         print(self.table)
-
-    @staticmethod
-    def _validate_input(value: str) -> bool:
-        if value.upper() in ['F', 'N', 'Q']:
-            return True
-        print("Invalid input.")
-        return False
