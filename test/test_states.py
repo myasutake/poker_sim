@@ -10,6 +10,7 @@ prompt_options = {
     'HERO_CHANGE_SEAT': 'S',
     'VILLAIN_CHANGE_SEAT': 'V',
     'FLOP': 'F',
+    'TURN': 'T',
 }
 
 
@@ -63,6 +64,26 @@ def table_flop_after_reflop(monkeypatch, table_flop) -> common.table.Table():
     table = table_flop
 
     monkeypatch.setattr('builtins.input', lambda _: prompt_options['FLOP'])
+    table.run()
+
+    return table
+
+
+@pytest.fixture(scope='function')
+def table_turn(monkeypatch, table_flop) -> common.table.Table():
+    table = table_flop
+
+    monkeypatch.setattr('builtins.input', lambda _: prompt_options['TURN'])
+    table.run()
+
+    return table
+
+
+@pytest.fixture(scope='function')
+def table_turn_after_return(monkeypatch, table_turn) -> common.table.Table():
+    table = table_turn
+
+    monkeypatch.setattr('builtins.input', lambda _: prompt_options['TURN'])
     table.run()
 
     return table
@@ -159,3 +180,17 @@ class TestFlopAfterReFlop:
     @staticmethod
     def test_deck_stub_has_47_cards(table_flop_after_reflop):
         assert table_flop_after_reflop.deck.number_of_cards_not_dealt == 47
+
+
+class TestTurn:
+
+    @staticmethod
+    def test_deck_stub_has_46_cards(table_turn):
+        assert table_turn.deck.number_of_cards_not_dealt == 46
+
+
+class TestTurnAfterReTurn:
+
+    @staticmethod
+    def test_deck_stub_has_46_cards(table_turn_after_return):
+        assert table_turn_after_return.deck.number_of_cards_not_dealt == 46
