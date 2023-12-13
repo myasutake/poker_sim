@@ -90,15 +90,30 @@ class Table(BaseClass):
         self._flop = []
         return
 
-    # Cards
+    # General
 
-    @property
-    def flop(self) -> list[common.cards.Card]:
-        return self._flop
+    def get_seat_by_number(self, seat_number: int) -> Seat:
+        for i_seat in self.seats:
+            if i_seat.number == seat_number:
+                return i_seat
+        raise IndexError(f'Seat number {seat_number} not found.')
 
-    @flop.setter
-    def flop(self, cards: list[common.cards.Card]) -> None:
-        self._flop = cards
+    def get_seats_by_role(self, role: Union[str, None]) -> list[Seat]:
+        self.verify_role(value=role)
+
+        seats = []
+        for i_seat in self.seats:
+            if i_seat.role == role:
+                seats.append(i_seat)
+        return seats
+
+    def get_random_empty_seat(self) -> Seat:
+        seats = self.get_seats_by_role(role=None)
+        return random.choice(seats)
+
+    def assign_role_to_seat(self, seat: Seat, role: Union[str, None]) -> None:
+        self.verify_role(value=role)
+        seat.role = role
         return
 
     def deal_to_seat(self, number_of_cards: int, seat_number: int) -> None:
@@ -121,41 +136,16 @@ class Table(BaseClass):
             self.deck.return_card_to_deck(card=i_card)
         return
 
-    def return_heros_cards_to_deck(self) -> None:
-        seat = self.get_hero_seat()
-        self.return_cards_to_deck(cards=seat.hand)
-        seat.hand = []
-        return
+    # Hero
 
-    def return_flop_to_deck(self) -> None:
-        self.return_cards_to_deck(cards=self.flop)
-        self.flop = []
+    def assign_hero_role_to_random_empty_seat(self) -> None:
+        seat = self.get_random_empty_seat()
+        self.assign_role_to_seat(seat=seat, role='H')
         return
 
     def get_heros_hand(self) -> list[common.cards.Card]:
         hero_seat = self.get_hero_seat()
         return hero_seat.hand
-
-    def deal_flop(self) -> None:
-        self.flop = self.deck.deal_cards(number_of_cards=3)
-        return
-
-    # Seats
-
-    def get_seat_by_number(self, seat_number: int) -> Seat:
-        for i_seat in self.seats:
-            if i_seat.number == seat_number:
-                return i_seat
-        raise IndexError(f'Seat number {seat_number} not found.')
-
-    def get_seats_by_role(self, role: Union[str, None]) -> list[Seat]:
-        self.verify_role(value=role)
-
-        seats = []
-        for i_seat in self.seats:
-            if i_seat.role == role:
-                seats.append(i_seat)
-        return seats
 
     def get_hero_seat(self) -> Union[Seat, None]:
         seats = self.get_seats_by_role(role='H')
@@ -165,6 +155,19 @@ class Table(BaseClass):
             return seats[0]
         return None
 
+    def return_heros_cards_to_deck(self) -> None:
+        seat = self.get_hero_seat()
+        self.return_cards_to_deck(cards=seat.hand)
+        seat.hand = []
+        return
+
+    # Villain
+
+    def assign_villain_role_to_random_empty_seat(self) -> None:
+        seat = self.get_random_empty_seat()
+        self.assign_role_to_seat(seat=seat, role='V')
+        return
+
     def get_villain_seat(self) -> Union[Seat, None]:
         seats = self.get_seats_by_role(role='V')
         if len(seats) > 1:
@@ -173,30 +176,24 @@ class Table(BaseClass):
             return seats[0]
         return None
 
-    def get_random_empty_seat(self) -> Seat:
-        seats = self.get_seats_by_role(role=None)
-        return random.choice(seats)
+    # Flop
 
-    def assign_role_to_seat(self, seat: Seat, role: Union[str, None]) -> None:
-        self.verify_role(value=role)
-        seat.role = role
+    @property
+    def flop(self) -> list[common.cards.Card]:
+        return self._flop
+
+    @flop.setter
+    def flop(self, cards: list[common.cards.Card]) -> None:
+        self._flop = cards
         return
 
-    def assign_hero_role_to_random_empty_seat(self) -> None:
-        seat = self.get_random_empty_seat()
-        self.assign_role_to_seat(seat=seat, role='H')
+    def deal_flop(self) -> None:
+        self.flop = self.deck.deal_cards(number_of_cards=3)
         return
 
-    def assign_villain_role_to_random_empty_seat(self) -> None:
-        seat = self.get_random_empty_seat()
-        self.assign_role_to_seat(seat=seat, role='V')
-        return
-
-    def _populate_seats(self) -> None:
-        seat_numbers = range(1, 10)
-        seat_names = ['UTG', 'UTG+1', 'UTG+2', 'LJ', 'HJ', 'CO', 'BTN', 'SB', 'BB']
-        for (i_seat_number, i_seat_name) in zip(seat_numbers, seat_names):
-            self.seats.append(Seat(number=i_seat_number, name=i_seat_name))
+    def return_flop_to_deck(self) -> None:
+        self.return_cards_to_deck(cards=self.flop)
+        self.flop = []
         return
 
     # States
@@ -228,7 +225,14 @@ class Table(BaseClass):
         self.state.run()
         return
 
-    # Misc
+    # Private Methods & Misc
+
+    def _populate_seats(self) -> None:
+        seat_numbers = range(1, 10)
+        seat_names = ['UTG', 'UTG+1', 'UTG+2', 'LJ', 'HJ', 'CO', 'BTN', 'SB', 'BB']
+        for (i_seat_number, i_seat_name) in zip(seat_numbers, seat_names):
+            self.seats.append(Seat(number=i_seat_number, name=i_seat_name))
+        return
 
     def __str__(self) -> str:
         s = ''
