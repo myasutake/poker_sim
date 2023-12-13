@@ -88,6 +88,7 @@ class Table(BaseClass):
         self._populate_seats()
         self.deck = common.cards.Deck()
         self._flop = []
+        self._turn = None
         return
 
     # General
@@ -194,6 +195,26 @@ class Table(BaseClass):
     def return_flop_to_deck(self) -> None:
         self.return_cards_to_deck(cards=self.flop)
         self.flop = []
+        return
+
+    # Turn
+
+    @property
+    def turn(self) -> common.cards.Card:
+        return self._turn
+
+    @turn.setter
+    def turn(self, card: common.cards.Card) -> None:
+        self._turn = card
+        return
+
+    def deal_turn(self) -> None:
+        self.turn = self.deck.deal_cards(number_of_cards=1)[0]
+        return
+
+    def return_turn_to_deck(self) -> None:
+        self.return_cards_to_deck(cards=[self.turn])
+        self.turn = None
         return
 
     # States
