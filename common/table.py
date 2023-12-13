@@ -11,7 +11,7 @@ import common.cards
 class BaseClass:
 
     @staticmethod
-    def verify_role(value: str) -> None:
+    def _verify_role(value: str) -> None:
         if value not in [None, 'H', 'V']:
             raise ValueError(f"Invalid role {value} assigned to seat.")
         return
@@ -60,7 +60,7 @@ class Seat(BaseClass):
 
     @role.setter
     def role(self, value: str) -> None:
-        self.verify_role(value=value)
+        self._verify_role(value=value)
         self._role = value
         return
 
@@ -100,7 +100,7 @@ class Table(BaseClass):
         raise IndexError(f'Seat number {seat_number} not found.')
 
     def get_seats_by_role(self, role: Union[str, None]) -> list[Seat]:
-        self.verify_role(value=role)
+        self._verify_role(value=role)
 
         seats = []
         for i_seat in self.seats:
@@ -113,7 +113,7 @@ class Table(BaseClass):
         return random.choice(seats)
 
     def assign_role_to_seat(self, seat: Seat, role: Union[str, None]) -> None:
-        self.verify_role(value=role)
+        self._verify_role(value=role)
         seat.role = role
         return
 
