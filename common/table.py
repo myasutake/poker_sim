@@ -89,6 +89,7 @@ class Table(BaseClass):
         self.deck = common.cards.Deck()
         self._flop = []
         self._turn = None
+        self._river = None
         return
 
     # General
@@ -217,6 +218,26 @@ class Table(BaseClass):
         self.turn = None
         return
 
+    # River
+
+    @property
+    def river(self) -> common.cards.Card:
+        return self._river
+
+    @river.setter
+    def river(self, card: common.cards.Card) -> None:
+        self._river = card
+        return
+
+    def deal_river(self) -> None:
+        self.river = self.deck.deal_cards(number_of_cards=1)[0]
+        return
+
+    def return_river_to_deck(self) -> None:
+        self.return_cards_to_deck(cards=[self.river])
+        self.river = None
+        return
+
     # States
 
     @property
@@ -259,7 +280,7 @@ class Table(BaseClass):
         s = ''
         for i_seat in self.seats:
             s += f'Seat {i_seat.number} - {i_seat.name:5} - {i_seat.role or " "} - {i_seat.hand}\n'
-        s += f'\nBoard: {self.flop} [{self.turn or ""}]\n'
+        s += f'\nBoard: {self.flop} [{self.turn or ""}] [{self.river or ""}]\n'
         return s
 
 
