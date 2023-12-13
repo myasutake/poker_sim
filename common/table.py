@@ -401,12 +401,13 @@ class Flop(TableStateWithUserInput):
 
     @property
     def valid_inputs(self) -> list[str]:
-        return ['F', 'N', 'Q']
+        return ['F', 'T', 'N', 'Q']
 
     @property
     def user_prompt(self) -> str:
         prompt_text = "F: Re-deal the flop"
-        prompt_text += "\nN: Start Over"
+        prompt_text += "\nT: Deal the turn"
+        prompt_text += "\n\nN: Start Over"
         prompt_text += "\nQ: Quit"
         prompt_text += "\n\n"
         return prompt_text
@@ -417,5 +418,33 @@ class Flop(TableStateWithUserInput):
         if user_input == 'F':
             self.table.return_flop_to_deck()
             self.table.deal_flop()
+
+        if user_input == 'T':
+            self.table.deal_turn()
+            self.table.state = Turn()
+
+        return
+
+
+class Turn(TableStateWithUserInput):
+
+    @property
+    def valid_inputs(self) -> list[str]:
+        return ['T', 'N', 'Q']
+
+    @property
+    def user_prompt(self) -> str:
+        prompt_text = "T: Re-deal the turn"
+        prompt_text += "\n\nN: Start Over"
+        prompt_text += "\nQ: Quit"
+        prompt_text += "\n\n"
+        return prompt_text
+
+    def run(self) -> None:
+        user_input = self.get_user_input_and_run_common_commands()
+
+        if user_input == 'T':
+            self.table.return_turn_to_deck()
+            self.table.deal_turn()
 
         return
