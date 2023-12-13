@@ -451,11 +451,12 @@ class Turn(TableStateWithUserInput):
 
     @property
     def valid_inputs(self) -> list[str]:
-        return ['T', 'N', 'Q']
+        return ['T', 'R', 'N', 'Q']
 
     @property
     def user_prompt(self) -> str:
         prompt_text = "T: Re-deal the turn"
+        prompt_text += "\nR: Deal the river"
         prompt_text += "\n\nN: Start Over"
         prompt_text += "\nQ: Quit"
         prompt_text += "\n\n"
@@ -467,5 +468,33 @@ class Turn(TableStateWithUserInput):
         if user_input == 'T':
             self.table.return_turn_to_deck()
             self.table.deal_turn()
+
+        if user_input == 'R':
+            self.table.deal_river()
+            self.table.state = River()
+
+        return
+
+
+class River(TableStateWithUserInput):
+
+    @property
+    def valid_inputs(self) -> list[str]:
+        return ['R', 'N', 'Q']
+
+    @property
+    def user_prompt(self) -> str:
+        prompt_text = "R: Re-deal the river"
+        prompt_text += "\n\nN: Start Over"
+        prompt_text += "\nQ: Quit"
+        prompt_text += "\n\n"
+        return prompt_text
+
+    def run(self) -> None:
+        user_input = self.get_user_input_and_run_common_commands()
+
+        if user_input == 'R':
+            self.table.return_river_to_deck()
+            self.table.deal_river()
 
         return
