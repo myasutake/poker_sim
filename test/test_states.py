@@ -11,6 +11,7 @@ prompt_options = {
     'VILLAIN_CHANGE_SEAT': 'V',
     'FLOP': 'F',
     'TURN': 'T',
+    'RIVER': 'R',
 }
 
 
@@ -84,6 +85,26 @@ def table_turn_after_return(monkeypatch, table_turn) -> common.table.Table():
     table = table_turn
 
     monkeypatch.setattr('builtins.input', lambda _: prompt_options['TURN'])
+    table.run()
+
+    return table
+
+
+@pytest.fixture(scope='function')
+def table_river(monkeypatch, table_turn) -> common.table.Table():
+    table = table_turn
+
+    monkeypatch.setattr('builtins.input', lambda _: prompt_options['RIVER'])
+    table.run()
+
+    return table
+
+
+@pytest.fixture(scope='function')
+def table_river_after_reriver(monkeypatch, table_river) -> common.table.Table():
+    table = table_river
+
+    monkeypatch.setattr('builtins.input', lambda _: prompt_options['RIVER'])
     table.run()
 
     return table
@@ -194,3 +215,17 @@ class TestTurnAfterReTurn:
     @staticmethod
     def test_deck_stub_has_46_cards(table_turn_after_return):
         assert table_turn_after_return.deck.number_of_cards_not_dealt == 46
+
+
+class TestRiver:
+
+    @staticmethod
+    def test_deck_stub_has_45_cards(table_river):
+        assert table_river.deck.number_of_cards_not_dealt == 45
+
+
+class TestRiverAfterReRiver:
+
+    @staticmethod
+    def test_deck_stub_has_45_cards(table_river_after_reriver):
+        assert table_river_after_reriver.deck.number_of_cards_not_dealt == 45
