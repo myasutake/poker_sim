@@ -259,7 +259,7 @@ class Table(BaseClass):
         s = ''
         for i_seat in self.seats:
             s += f'Seat {i_seat.number} - {i_seat.name:5} - {i_seat.role or " "} - {i_seat.hand}\n'
-        s += f'\nBoard: {self.flop}\n'
+        s += f'\nBoard: {self.flop} [{self.turn or ""}]\n'
         return s
 
 
